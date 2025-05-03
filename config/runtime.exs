@@ -21,6 +21,7 @@ if System.get_env("PHX_SERVER") do
 end
 
 if config_env() == :prod do
+  IO.puts(">>> Runtime loaded. Setting up endpoint...")
   database_url =
     System.fetch_env!("DATABASE_URL") ||
       raise """
@@ -56,7 +57,11 @@ if config_env() == :prod do
 
   config :markdown_editor, MarkdownEditorWeb.Endpoint,
     url: [host: "markdownchallenge.onrender.com", port: 443],
-    check_origin: [..., "//*.markdownchallenge.onrender.com"],
+    check_origin: [
+  "https://markdownchallenge.onrender.com",
+  ~r/^https?:\/\/(www\.)?markdownchallenge\.onrender\.com$/
+],
+
     http: [
       port: String.to_integer(System.get_env("PORT") || "4000"),
       transport_options: [socket_opts: [:inet6]]
