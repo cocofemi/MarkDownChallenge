@@ -56,9 +56,7 @@ if config_env() == :prod do
 
   config :markdown_editor, MarkdownEditorWeb.Endpoint,
     url: [host: "markdownchallenge.onrender.com", port: 443],
-    check_origin: [
-      "https://markdownchallenge.onrender.com"
-    ],
+    check_origin: [..., "//*.markdownchallenge.onrender.com"],
     http: [
       port: String.to_integer(System.get_env("PORT") || "4000"),
       transport_options: [socket_opts: [:inet6]]
