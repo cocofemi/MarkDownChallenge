@@ -19,9 +19,6 @@ defmodule MarkdownEditor.Application do
       # {MarkdownEditor.Worker, arg},
       # Start to serve requests, typically the last entry
       MarkdownEditorWeb.Endpoint,
-      {ChromicPDF.Supervisor,
-  name: ChromicPDF,
-  executable_path: Path.expand("priv/chromium/headless-chrome")},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

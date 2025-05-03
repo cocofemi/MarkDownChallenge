@@ -38,11 +38,6 @@ def handle_event("export_pdf", _params, socket) do
   end
 end
 
-
-
-
-
-
 def handle_event("copy_html", _params, socket) do
   {:noreply,
    socket
