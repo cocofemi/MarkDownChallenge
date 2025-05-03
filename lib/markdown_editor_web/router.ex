@@ -19,6 +19,8 @@ defmodule MarkdownEditorWeb.Router do
 
     #get "/", PageController, :home
     live "/", MarkdownLive
+    get "/downloads/:filename", DownloadController, :serve_pdf
+
   end
 
   # Other scopes may use custom stacks.

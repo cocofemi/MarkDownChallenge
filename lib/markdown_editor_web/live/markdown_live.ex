@@ -18,9 +18,7 @@ def handle_event("export_pdf", _params, socket) do
   html = socket.assigns.html
 
   filename = "markdown_export_#{DateTime.utc_now() |> DateTime.to_unix()}.pdf"
-  path = Path.join("priv/static/exports", filename)
-
-  File.mkdir_p!("priv/static/exports")
+  path = Path.join("/tmp", filename)
 
   case MarkdownEditor.PDFGenerator.generate_pdf(html) do
     {:ok, pdf_binary} ->
@@ -29,14 +27,14 @@ def handle_event("export_pdf", _params, socket) do
       {:noreply,
        socket
        |> put_flash(:info, "PDF exported successfully!")
-       |> push_event("export-pdf", %{url: "/exports/#{filename}"})}
+       |> push_event("export-pdf", %{url: ~p"/downloads/#{filename}"})
+}
 
     {:error, reason} ->
-      {:noreply,
-       socket
-       |> put_flash(:error, "PDF export failed: #{inspect(reason)}")}
+      {:noreply, put_flash(socket, :error, "PDF export failed: #{inspect(reason)}")}
   end
 end
+
 
 def handle_event("copy_html", _params, socket) do
   {:noreply,
