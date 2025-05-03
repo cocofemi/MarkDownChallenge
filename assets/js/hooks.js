@@ -4,11 +4,13 @@ let Hooks = {};
 
 Hooks.RenderHook = {
   mounted() {
-    this.handleEvent("export-pdf", ({ html }) => {
-      const doc = new jsPDF();
-      doc.html(html, {
-        callback: () => doc.save("markdown_export.pdf"),
-      });
+    this.handleEvent("export-pdf", ({ url }) => {
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = ""; // triggers auto-download
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
     });
 
     this.handleEvent("copy-html", ({ html }) => {

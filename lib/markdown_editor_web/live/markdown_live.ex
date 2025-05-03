@@ -21,21 +21,17 @@ def handle_event("export_pdf", _params, socket) do
   temp_filepath = Path.join(System.tmp_dir!(), filename)
   export_path = Path.join("priv/static/exports", filename)
 
-  # Generate the PDF in a temp directory
-  :ok = ChromicPDF.print_to_pdf({:html, html}, output: temp_filepath)
-
-  # Ensure exports directory exists
   File.mkdir_p!("priv/static/exports")
-
-  # Move the PDF to priv/static/exports so it can be served by Phoenix
+  :ok = ChromicPDF.print_to_pdf({:html, html}, output: temp_filepath)
   File.rename!(temp_filepath, export_path)
 
-  # Redirect to static path
+  # Push event to trigger download
   {:noreply,
    socket
-   |> put_flash(:info, "Exported successfully!")
-   |> push_redirect(to: ~p"/exports/#{filename}")}
+   |> put_flash(:info, "Download starting...")
+   |> push_event("export-pdf", %{url: "/exports/#{filename}"})}
 end
+
 
 
 
