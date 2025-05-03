@@ -21,6 +21,7 @@ if System.get_env("PHX_SERVER") do
 end
 
 if config_env() == :prod do
+  IO.inspect(System.get_env("DATABASE_URL"), label: ">>> DATABASE_URL at runtime")
   database_url =
     System.fetch_env!("DATABASE_URL") ||
       raise """
@@ -49,7 +50,7 @@ if config_env() == :prod do
       You can generate one by calling: mix phx.gen.secret
       """
 
-  host = System.get_env!("PHX_HOST") || "markdownchallenge.onrender.com"
+  host = System.get_env("RENDER_EXTERNAL_HOSTNAME") || "localhost" # highlight-line
   port = String.to_integer(System.get_env("PORT") || "4000")
 
   config :markdown_editor, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
