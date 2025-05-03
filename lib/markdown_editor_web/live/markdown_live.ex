@@ -18,19 +18,27 @@ def handle_event("export_pdf", _params, socket) do
   html = socket.assigns.html
 
   filename = "markdown_export_#{DateTime.utc_now() |> DateTime.to_unix()}.pdf"
-  temp_filepath = Path.join(System.tmp_dir!(), filename)
-  export_path = Path.join("priv/static/exports", filename)
+  path = Path.join("priv/static/exports", filename)
 
   File.mkdir_p!("priv/static/exports")
-  :ok = ChromicPDF.print_to_pdf({:html, html}, output: temp_filepath)
-  File.rename!(temp_filepath, export_path)
 
-  # Push event to trigger download
-  {:noreply,
-   socket
-   |> put_flash(:info, "Download starting...")
-   |> push_event("export-pdf", %{url: "/exports/#{filename}"})}
+  case MarkdownEditor.PDFGenerator.generate_pdf(html) do
+    {:ok, pdf_binary} ->
+      File.write!(path, pdf_binary)
+
+      {:noreply,
+       socket
+       |> put_flash(:info, "PDF exported successfully!")
+       |> push_event("export-pdf", %{url: "/exports/#{filename}"})}
+
+    {:error, reason} ->
+      {:noreply,
+       socket
+       |> put_flash(:error, "PDF export failed: #{inspect(reason)}")}
+  end
 end
+
+
 
 
 

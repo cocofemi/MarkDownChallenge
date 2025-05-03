@@ -7,7 +7,7 @@ Hooks.RenderHook = {
     this.handleEvent("export-pdf", ({ url }) => {
       const link = document.createElement("a");
       link.href = url;
-      link.download = ""; // triggers auto-download
+      link.download = "";
       document.body.appendChild(link);
       link.click();
       link.remove();

@@ -21,9 +21,7 @@ defmodule MarkdownEditor.Application do
       MarkdownEditorWeb.Endpoint,
       {ChromicPDF.Supervisor,
   name: ChromicPDF,
-  executable_path: Path.expand("priv/chromium/headless-chrome")}
-
-
+  executable_path: Path.expand("priv/chromium/headless-chrome")},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
