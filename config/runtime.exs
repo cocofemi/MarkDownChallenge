@@ -22,7 +22,7 @@ end
 
 if config_env() == :prod do
   database_url =
-    System.get_env("DATABASE_URL") ||
+    System.get_env("postgresql://markdwon_challenge_user:oQiesBNa76CqUzdmww8H5oO5n9fFo8fR@dpg-d0b48g95pdvs73cbgdtg-a/markdwon_challenge") ||
       raise """
       environment variable DATABASE_URL is missing.
       For example: ecto://USER:PASS@HOST/DATABASE
@@ -115,16 +115,5 @@ if config_env() == :prod do
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
 
-  if config_env() == :prod do
-  config :markdown_editor, MarkdownEditor.Repo,
-    url: System.fetch_env!("DATABASE_URL"),
-    pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
-    ssl: true
-
-  config :markdown_editor, MarkdownEditorWeb.Endpoint,
-    server: true,
-    url: [host: System.fetch_env!("PHX_HOST"), port: 443],
-    secret_key_base: System.fetch_env!("SECRET_KEY_BASE")
-end
 
 end
