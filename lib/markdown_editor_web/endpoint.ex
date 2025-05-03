@@ -23,7 +23,8 @@ defmodule MarkdownEditorWeb.Endpoint do
     at: "/",
     from: :markdown_editor,
     gzip: false,
-    only: MarkdownEditorWeb.static_paths()
+    only: ~w(assets fonts images favicon.ico robots.txt exports)
+
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

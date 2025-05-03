@@ -9,6 +9,7 @@ defmodule MarkdownEditor.Application do
   def start(_type, _args) do
     children = [
       MarkdownEditorWeb.Telemetry,
+
       MarkdownEditor.Repo,
       {DNSCluster, query: Application.get_env(:markdown_editor, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: MarkdownEditor.PubSub},
@@ -17,7 +18,9 @@ defmodule MarkdownEditor.Application do
       # Start a worker by calling: MarkdownEditor.Worker.start_link(arg)
       # {MarkdownEditor.Worker, arg},
       # Start to serve requests, typically the last entry
-      MarkdownEditorWeb.Endpoint
+      MarkdownEditorWeb.Endpoint,
+      {ChromicPDF.Supervisor, name: ChromicPDF}
+
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -1,5 +1,7 @@
 defmodule MarkdownEditorWeb.MarkdownLive do
   use MarkdownEditorWeb, :live_view
+  alias MarkdownEditorWeb.Router.Helpers, as: Routes
+
 
   def mount(_params, _session, socket) do
     {:ok, assign(socket, markdown: "", html: "")}
@@ -12,9 +14,30 @@ defmodule MarkdownEditorWeb.MarkdownLive do
 end
 
 
- def handle_event("export_pdf", _params, socket) do
-  {:noreply, push_event(socket, "export-pdf", %{html: socket.assigns.html})}
+def handle_event("export_pdf", _params, socket) do
+  html = socket.assigns.html
+
+  filename = "markdown_export_#{DateTime.utc_now() |> DateTime.to_unix()}.pdf"
+  temp_filepath = Path.join(System.tmp_dir!(), filename)
+  export_path = Path.join("priv/static/exports", filename)
+
+  # Generate the PDF in a temp directory
+  :ok = ChromicPDF.print_to_pdf({:html, html}, output: temp_filepath)
+
+  # Ensure exports directory exists
+  File.mkdir_p!("priv/static/exports")
+
+  # Move the PDF to priv/static/exports so it can be served by Phoenix
+  File.rename!(temp_filepath, export_path)
+
+  # Redirect to static path
+  {:noreply,
+   socket
+   |> put_flash(:info, "Exported successfully!")
+   |> push_redirect(to: ~p"/exports/#{filename}")}
 end
+
+
 
 def handle_event("copy_html", _params, socket) do
   {:noreply,
