@@ -55,6 +55,11 @@ if config_env() == :prod do
 
   config :markdown_editor, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
+  config :chromic_pdf,
+  name: ChromicPDF,
+  executable_path: Path.expand("priv/chromium/headless-chrome")
+
+
   config :markdown_editor, MarkdownEditorWeb.Endpoint,
     url: [host: "markdownchallenge.onrender.com", port: 443],
     http: [
